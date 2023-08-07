@@ -23,7 +23,10 @@ public class main {
 //        String reverseVowels = reverseVowels(input);
 //        System.out.println(reverseVowels);
 
-        
+        String input = "a good   example";
+        String output = reverseWords(input);
+        System.out.println(output);
+
     }
 
     public static String mergeAlternately(String word1, String word2) {
@@ -164,6 +167,35 @@ public class main {
         return false;
     }
 
+    public static String reverseWords(String s) {
+        String after = s.trim().replaceAll(" +", " ");
+        char[] charArray = after.toCharArray();
+        StringBuilder sb = new StringBuilder();
+
+        int j = 0;
+        for(int i = charArray.length - 1; i > -2; i--) {
+
+            if (i == -1 || charArray[i] == ' '){
+                String substring = getSubstringFromIndex(charArray, i +1, j);
+                sb.append(substring);
+                sb.append(" ");
+                j = 0;
+            } else {
+                j++;
+            }
+        }
+
+       return sb.toString().trim();
+    }
+
+    public static String getSubstringFromIndex(char[] charArray, int start, int end) {
+        StringBuilder sb = new StringBuilder();
+        for(int i = start; i < start + end; i++) {
+            sb.append(charArray[i]);
+        }
+
+        return sb.toString();
+    }
 }
 
 
