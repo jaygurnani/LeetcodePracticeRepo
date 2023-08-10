@@ -1,5 +1,6 @@
 package stringmerge;
 
+import java.util.Arrays;
 import java.util.Set;
 
 public class main {
@@ -23,10 +24,13 @@ public class main {
 //        String reverseVowels = reverseVowels(input);
 //        System.out.println(reverseVowels);
 
-        String input = "a good   example";
-        String output = reverseWords(input);
-        System.out.println(output);
+//        String input = "a good   example";
+//        String output = reverseWords(input);
+//        System.out.println(output);
 
+        //int[] input = {0,1,0,3,12};
+        int[] input = {1, 0};
+        moveZeroes(input);
     }
 
     public static String mergeAlternately(String word1, String word2) {
@@ -195,6 +199,44 @@ public class main {
         }
 
         return sb.toString();
+    }
+
+    public static void moveZeroes(int[] nums) {
+        int numLength = nums.length;
+        int zeroIndex = 0;
+        int numberIndex = 0;
+
+        while (zeroIndex != numLength && numberIndex != numLength) {
+            boolean containsZero = false;
+            boolean containsNumber = false;
+            if (nums[zeroIndex] == 0) {
+                containsZero = true;
+            } else {
+                zeroIndex++;
+            }
+
+            if (nums[numberIndex] != 0) {
+                containsNumber = true;
+            } else {
+                numberIndex++;
+            }
+
+            if (containsZero && containsNumber) {
+                if (numberIndex > zeroIndex) {
+                    int temp = nums[zeroIndex];
+                    nums[zeroIndex] = nums[numberIndex];
+                    nums[numberIndex] = temp;
+                }
+
+                if (zeroIndex > numberIndex) {
+                    numberIndex++;
+                }
+            }
+
+
+        }
+
+        System.out.println(Arrays.toString(nums));
     }
 }
 
