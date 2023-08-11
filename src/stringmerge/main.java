@@ -1,7 +1,11 @@
 package stringmerge;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class main {
 
@@ -29,8 +33,12 @@ public class main {
 //        System.out.println(output);
 
         //int[] input = {0,1,0,3,12};
-        int[] input = {1, 0};
-        moveZeroes(input);
+//        int[] input = {1, 0};
+//        moveZeroes(input);
+
+        int[] input = {3,1,3,4,3};
+        int response = maxOperations2(input, 6);
+        System.out.println(response);
     }
 
     public static String mergeAlternately(String word1, String word2) {
@@ -237,6 +245,66 @@ public class main {
         }
 
         System.out.println(Arrays.toString(nums));
+    }
+
+    public static int maxOperations(int[] nums, int k) {
+        int numberOfOperations = 0;
+        ArrayList<Integer> numsList = IntStream.of(nums).boxed().collect(Collectors.toCollection(ArrayList::new));
+
+        int i = 0;
+        while (i < numsList.size()) {
+            int currentSize = numsList.size();
+            numsList = findAndRemoveMatchingK(numsList, i, k);
+            if (numsList.size() != currentSize){
+                numberOfOperations++;
+                i = 0;
+            } else {
+                i++;
+            }
+
+        }
+
+        return numberOfOperations;
+    }
+
+    public static ArrayList<Integer> findAndRemoveMatchingK(ArrayList<Integer> nums, int startingIndex, int k) {
+        int startingValue = nums.get(startingIndex);
+
+        for (int i = startingIndex+1; i < nums.size() ; i++) {
+            int endingValue = nums.get(i);
+            if (startingValue + endingValue == k) {
+                nums.remove(startingIndex);
+                nums.remove(i-1);
+                return nums;
+            }
+        }
+
+        return nums;
+    }
+
+    public static int maxOperations2(int nums[], int k) {
+        Arrays.sort(nums);
+
+        int left= 0;
+        int right = nums.length-1;
+        int count= 0;
+
+        while(left < right) {
+            int sum = nums[left] + nums[right];
+
+            if (sum == k) {
+                left++;
+                right--;
+                count++;
+            } else if (sum > k) {
+
+                right--;
+            } else {
+                left++;
+            }
+        }
+
+        return count;
     }
 }
 
