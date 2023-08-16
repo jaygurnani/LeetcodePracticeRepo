@@ -10,11 +10,11 @@ import java.util.stream.IntStream;
 public class main {
 
     public static void main(String[] args){
-        //String output = mergeAlternately("ab", "pqrs");
-        //System.out.println(output);
+//        String output = mergeAlternately("ab", "pqrs");
+//        System.out.println(output);
 
-        //String output1 = gcdOfStrings("ABABAB", "ABAB");
-        //System.out.println(output1);
+//        String output1 = gcdOfStrings("ABABAB", "ABAB");
+//        System.out.println(output1);
 
 //        int[] input2 = new int[]{1, 0, 0, 0, 1};
 //        boolean output2 = canPlaceFlowers(input2, 1);
@@ -36,9 +36,14 @@ public class main {
 //        int[] input = {1, 0};
 //        moveZeroes(input);
 
-        int[] input = {3,1,3,4,3};
-        int response = maxOperations2(input, 6);
-        System.out.println(response);
+//        int[] input = {3,1,3,4,3};
+//        int response = maxOperations2(input, 6);
+//        System.out.println(response);
+
+        String t = "ahbgdc";
+        String s = "abc";
+        boolean output = isSubsequence(s, t);
+        System.out.println(output);
     }
 
     public static String mergeAlternately(String word1, String word2) {
@@ -305,6 +310,36 @@ public class main {
         }
 
         return count;
+    }
+
+    public static boolean isSubsequence(String s, String t) {
+        char[] testString = t.toCharArray();
+        int testLength = testString.length;
+        int testPointer = 0;
+
+        char[] subString  = s.toCharArray();
+        int subLength = subString.length;
+        int subPointer = 0;
+        boolean result = false;
+
+        if (subLength == 0) {
+            return true;
+        }
+
+        while (testPointer < testLength && subPointer < subLength) {
+            if (subString[subPointer] == testString[testPointer]) {
+                subPointer++;
+                testPointer++;
+            } else {
+                testPointer++;
+            }
+        }
+
+        if (subPointer == subLength && subString[subPointer-1] == testString[testPointer-1]) {
+            result = true;
+        }
+
+        return result;
     }
 }
 
