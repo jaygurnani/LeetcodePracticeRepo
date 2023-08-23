@@ -1,5 +1,8 @@
 package stringmerge;
 
+import com.sun.source.tree.Tree;
+
+import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,10 +43,10 @@ public class main {
 //        int response = maxOperations2(input, 6);
 //        System.out.println(response);
 
-        String t = "ahbgdc";
-        String s = "abc";
-        boolean output = isSubsequence(s, t);
-        System.out.println(output);
+//        String t = "ahbgdc";
+//        String s = "abc";
+//        boolean output = isSubsequence(s, t);
+//        System.out.println(output);
     }
 
     public static String mergeAlternately(String word1, String word2) {
@@ -340,6 +343,74 @@ public class main {
         }
 
         return result;
+    }
+
+    public static int maxDepth(TreeNode root) {
+        int left = 0;
+        int right = 0;
+
+        if (root == null) {
+            return 0;
+        }
+
+        if (root.left == null && root.right == null) {
+            return 1;
+        }
+
+        left = 1 + maxDepth(root.left);
+        right =  1 + maxDepth(root.right);
+
+        if (left > right) {
+            return left;
+        } else {
+            return right;
+        }
+    }
+
+    public boolean leafSimilar(TreeNode root1, TreeNode root2) {
+        String root1String = getLeafNode(root1);
+        String root2String = getLeafNode(root2);
+
+        return root1String.equals(root2String);
+    }
+
+    public String getLeafNode(TreeNode root) {
+        String left;
+        String right;
+
+        if (root == null) {
+            return "";
+        }
+
+        if (root.left == null && root.right == null) {
+            return String.valueOf(root.val);
+        }
+
+        left = getLeafNode(root.left);
+        right = getLeafNode(root.right);
+
+        if (left == "") {
+            return right;
+        }
+        if (right == "") {
+            return left;
+        }
+
+        return left + "," + right;
+    }
+
+    /* Defined Classes */
+    public class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode() {}
+        TreeNode(int val) { this.val = val; }
+        TreeNode(int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
     }
 }
 
