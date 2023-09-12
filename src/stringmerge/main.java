@@ -47,6 +47,11 @@ public class main {
 //        String s = "abc";
 //        boolean output = isSubsequence(s, t);
 //        System.out.println(output);
+
+        int[] nums = {-1};
+        int k = 1;
+        double returnVal = findMaxAverage(nums, k);
+        System.out.println(returnVal);
     }
 
     public static String mergeAlternately(String word1, String word2) {
@@ -398,6 +403,30 @@ public class main {
 
         return left + "," + right;
     }
+
+
+    public static double findMaxAverage(int[] nums, int k) {
+        double currentAverage = Double.NEGATIVE_INFINITY;
+        for(int i = 0; i <= nums.length - k; i++) {
+            double newAverage = calculateAverage(i, i+k, nums, k);
+            if (newAverage > currentAverage) {
+                currentAverage = newAverage;
+            }
+        }
+
+        return currentAverage;
+    }
+
+    public static double calculateAverage(int start, int end, int[] nums, int size) {
+
+        int runningTotal = 0;
+        for(int i = start; i < end; i++) {
+            runningTotal = runningTotal + nums[i];
+        }
+
+        return runningTotal / (double) size;
+    }
+
 
     /* Defined Classes */
     public class TreeNode {
