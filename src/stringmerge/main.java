@@ -50,8 +50,12 @@ public class main {
 //        double returnVal = findMaxAverage(nums, k);
 //        System.out.println(returnVal);
 
-        int n = 25;
-        int output = tribonacci(n);
+//        int n = 25;
+//        int output = tribonacci(n);
+//        System.out.println(output);
+
+        int[] input = {1,100,1,1,1,100,1,1,100,1};
+        int output = minCostClimbingStairs(input);
         System.out.println(output);
     }
 
@@ -444,6 +448,33 @@ public class main {
         }
 
         return dictionary.get(n);
+    }
+
+    public static int minCostClimbingStairs(int[] cost) {
+        HashMap<Integer, Integer> dictionary = new HashMap<>();
+        dictionary.put(0, cost[0]);
+        dictionary.put(1, cost[1]);
+
+        for (int i = 0; i <= cost.length; i++){
+            if (dictionary.containsKey(i)) {
+                continue;
+            } else {
+                int internalCost = 0;
+                if (i != cost.length) {
+                    internalCost = cost[i];
+                }
+                int twoStep = dictionary.get(i - 2) + internalCost;
+                int oneStep = dictionary.get(i - 1) + internalCost;
+
+                if (twoStep < oneStep) {
+                    dictionary.put(i, twoStep);
+                } else {
+                    dictionary.put(i, oneStep);
+                }
+            }
+        }
+
+        return dictionary.get(cost.length);
     }
 
     /* Defined Classes */
