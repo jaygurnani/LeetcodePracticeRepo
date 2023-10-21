@@ -3,10 +3,7 @@ package stringmerge;
 import com.sun.source.tree.Tree;
 
 import javax.swing.tree.TreeNode;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -48,10 +45,14 @@ public class main {
 //        boolean output = isSubsequence(s, t);
 //        System.out.println(output);
 
-        int[] nums = {-1};
-        int k = 1;
-        double returnVal = findMaxAverage(nums, k);
-        System.out.println(returnVal);
+//        int[] nums = {-1};
+//        int k = 1;
+//        double returnVal = findMaxAverage(nums, k);
+//        System.out.println(returnVal);
+
+        int n = 25;
+        int output = tribonacci(n);
+        System.out.println(output);
     }
 
     public static String mergeAlternately(String word1, String word2) {
@@ -427,6 +428,23 @@ public class main {
         return runningTotal / (double) size;
     }
 
+    public static int tribonacci(int n) {
+        HashMap<Integer, Integer> dictionary = new HashMap<>();
+        dictionary.put(0, 0);
+        dictionary.put(1, 1);
+        dictionary.put(2, 1);
+
+        for(int i = 0; i <= n; i++) {
+            if (dictionary.containsKey(i)) {
+                continue;
+            } else {
+                int toAdd = dictionary.get(i-3) + dictionary.get(i-2) + dictionary.get(i-1);
+                dictionary.put(i, toAdd);
+            }
+        }
+
+        return dictionary.get(n);
+    }
 
     /* Defined Classes */
     public class TreeNode {
