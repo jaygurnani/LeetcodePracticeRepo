@@ -54,8 +54,12 @@ public class main {
 //        int output = tribonacci(n);
 //        System.out.println(output);
 
-        int[] input = {1,100,1,1,1,100,1,1,100,1};
-        int output = minCostClimbingStairs(input);
+//        int[] input = {1,100,1,1,1,100,1,1,100,1};
+//        int output = minCostClimbingStairs(input);
+//        System.out.println(output);
+
+        int[] input = {2,7,9,3,1};
+        int output = rob(input);
         System.out.println(output);
     }
 
@@ -475,6 +479,23 @@ public class main {
         }
 
         return dictionary.get(cost.length);
+    }
+
+    public static int rob(int[] nums) {
+        HashMap<Integer, Integer> dictionary = new HashMap<>();
+        dictionary.put(0, 0);
+        dictionary.put(1, nums[0]);
+
+        for(int i = 2; i < nums.length + 1; i++){
+            int singleHouse = dictionary.get(i-1);
+            int twoHouses = nums[i-1] + dictionary.get(i-2);
+            int max = Math.max(singleHouse, twoHouses);
+
+            dictionary.put(i, max);
+        }
+
+        System.out.println(dictionary);
+        return dictionary.get(nums.length);
     }
 
     /* Defined Classes */
