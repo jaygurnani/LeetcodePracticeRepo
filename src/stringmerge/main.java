@@ -58,8 +58,11 @@ public class main {
 //        int output = minCostClimbingStairs(input);
 //        System.out.println(output);
 
-        int[] input = {2,7,9,3,1};
-        int output = rob(input);
+//        int[] input = {2,7,9,3,1};
+//        int output = rob(input);
+        int[] input = {3,2,1,5,6,4};
+        int k = 2;
+        int output = findKthLargest(input, k);
         System.out.println(output);
     }
 
@@ -496,6 +499,21 @@ public class main {
 
         System.out.println(dictionary);
         return dictionary.get(nums.length);
+    }
+
+    public static int findKthLargest(int[] nums, int k) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+        int result = 0;
+
+        for(int i = 0; i < nums.length; i++) {
+            pq.add(nums[i]);
+        }
+
+        for(int i = 0; i < k; i++){
+            result = pq.poll();
+        }
+
+        return result;
     }
 
     /* Defined Classes */
