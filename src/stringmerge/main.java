@@ -60,9 +60,16 @@ public class main {
 
 //        int[] input = {2,7,9,3,1};
 //        int output = rob(input);
-        int[] input = {3,2,1,5,6,4};
-        int k = 2;
-        int output = findKthLargest(input, k);
+//        int[] input = {3,2,1,5,6,4};
+//        int k = 2;
+//        int output = findKthLargest(input, k);
+
+        //int output = uniquePaths(3, 7);
+        //int output = longestCommonSubsequence("abcde", "ace");
+
+        int[] input = {1,3,2,8,4,9};
+        int output = maxProfit(input, 3);
+
         System.out.println(output);
     }
 
@@ -516,6 +523,102 @@ public class main {
         return result;
     }
 
+    public static int uniquePaths(int y, int x) {
+
+        int[][] boardPaths = new int[y][x];
+        for (int i = 0; i < y; i++){
+            boardPaths[i][0] = 1;
+        }
+        for (int j = 0; j < x; j++){
+            boardPaths[0][j] = 1;
+        }
+
+
+        for(int i = 1; i < y; i++){
+            for (int j = 1; j < x; j++) {
+                boardPaths[i][j] = boardPaths[i-1][j] + boardPaths[i][j-1];
+            }
+        }
+
+        return boardPaths[y-1][x-1];
+
+    }
+
+    public static int longestCommonSubsequence(String text1, String text2) {
+        int text1Length = text1.toCharArray().length;
+        char[] text1CharArray = text1.toCharArray();
+
+        int text2Length = text2.toCharArray().length;
+        char[] text2CharArray = text2.toCharArray();
+
+        int[][] dp = new int[text1Length + 1][text2Length + 1];
+
+        for(int i = 1; i < text1Length + 1; i++) {
+            for(int j = 1; j < text2Length + 1; j++) {
+                if (text1CharArray[i-1] == text2CharArray[j-1]) {
+                    dp[i][j] = dp[i-1][j-1] + 1;
+
+                } else {
+                    dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1] );
+                }
+            }
+        }
+
+        return dp[text1Length][text2Length];
+    }
+
+    public static int maxProfit(int[] prices, int fee) {
+        int[][] dp = new int[prices.length][2];
+
+        // if we have no stock. Now we have no stock
+        dp[0][0] = 0;
+        // if we buy the stock. Now we have the stock
+        dp[0][1] = -prices[0];
+
+        for(int i = 1; i < prices.length; i++) {
+            // keep the stock or sell it
+            dp[i][0] = Math.max(dp[i-1][0], dp[i-1][1] + prices[i] - fee);
+
+            // buy the stock or keep
+            dp[i][1] = Math.max(dp[i-1][0] - prices[i], dp[i-1][1]);
+        }
+
+
+        return dp[prices.length-1][0];
+    }
+
+    public static ListNode reverseList(ListNode head) {
+        if (head == null){
+            return null;
+        }
+
+        if (head.next == null) {
+            return head;
+        }
+
+        ListNode curr = head;
+        ListNode nextItem = head.next;
+        curr.next = null;
+
+        while(nextItem.next != null) {
+            ListNode thirdNode = nextItem.next;
+
+            System.out.println("Moving:" + nextItem.next.val + "to" + curr.val);
+            nextItem.next = curr;
+            curr = nextItem;
+            nextItem = thirdNode;
+        }
+        nextItem.next = curr;
+
+        ListNode print = nextItem;
+        while (print.next != null) {
+            System.out.println(print.val);
+            print = print.next;
+        }
+        return nextItem;
+    }
+    }
+
     /* Defined Classes */
     public class TreeNode {
         int val;
@@ -529,6 +632,15 @@ public class main {
             this.right = right;
         }
     }
+
+    public class ListNode {
+      int val;
+      ListNode next;
+      ListNode() {}
+      ListNode(int val) { this.val = val; }
+      ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+    }
+
 }
 
 
