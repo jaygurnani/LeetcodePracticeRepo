@@ -1,8 +1,6 @@
 package stringmerge;
 
-import com.sun.source.tree.Tree;
 
-import javax.swing.tree.TreeNode;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -67,8 +65,12 @@ public class main {
         //int output = uniquePaths(3, 7);
         //int output = longestCommonSubsequence("abcde", "ace");
 
-        int[] input = {1,3,2,8,4,9};
-        int output = maxProfit(input, 3);
+//        int[] input = {1,3,2,8,4,9};
+//        int output = maxProfit(input, 3);
+
+        String s = "abab";
+        String p = "ab";
+        List<Integer> output = findAnagrams(s,p);
 
         System.out.println(output);
     }
@@ -617,6 +619,225 @@ public class main {
         }
         return nextItem;
     }
+
+    // First attempted but timed out
+    public static List<Integer> findAnagrams(String s, String p) {
+        char[] sChar = s.toCharArray();
+        char[] pChar = p.toCharArray();
+        List<Integer> result = new ArrayList<>();
+
+        for(int i = 0; i < s.length(); i++) {
+            // if we have any character that is contained in the look up
+            if (p.contains(String.valueOf(sChar[i]))) {
+
+                // get the first p length characters
+                int offset = p.length() + i;
+                if (p.length() + i > s.length()) {
+                    offset = s.length();
+                }
+                String substring = s.substring(i, offset);
+
+                if (isAnagram(substring, p)){
+                    result.add(i);
+                }
+
+            }
+        }
+
+        return result;
+    }
+
+    public static boolean isAnagram(String s, String p) {
+        char[] sChar = s.toCharArray();
+        char[] pChar = p.toCharArray();
+
+        for(int i = 0; i < s.length(); i++) {
+            for(int j = 0; j < p.length(); j++) {
+                if (sChar[i] == pChar[j]) {
+                    sChar[i] = 0;
+                    pChar[j] = 0;
+                }
+            }
+        }
+
+        boolean sCharIsEmpty = true;
+        for(int i = 0; i < sChar.length; i++) {
+            if (sChar[i] != 0){
+                sCharIsEmpty = false;
+                continue;
+            }
+        }
+        boolean pCharIsEmpty = true;
+        for(int i = 0; i < pChar.length; i++) {
+            if (pChar[i] != 0){
+                pCharIsEmpty = false;
+                continue;
+            }
+        }
+
+        if (sCharIsEmpty && pCharIsEmpty) {
+            return true;
+        }
+        return false;
+    }
+
+    // Second attempt looking at solution
+    public List<Integer> findAnagrams2(String s, String p) {
+        int lenS, lenP;
+        lenS = s.length();
+        lenP = p.length();
+
+        List<Integer> res = new ArrayList<>();
+        if(lenP > lenS) return res;
+
+        int[] charsInP = new int[26];
+        calculateFreq(p, charsInP);
+
+        int[] charsInS = new int[26];
+
+        // Check the first X character to see if they match
+        calculateFreq(s.substring(0, lenP), charsInS);
+        if(equalFreq(charsInP, charsInS)){
+            res.add(0);
+        }
+
+        // Sliding window
+        for(int i = lenP; i < lenS; i++){
+            char charBeforeStartOfWindow = s.charAt(i-lenP);
+            char charAtEndOfWindow = s.charAt(i);
+
+            // Move the Window
+            charsInS[charBeforeStartOfWindow - 'a']--;
+            charsInS[charAtEndOfWindow - 'a']++;
+
+            // If the frequency count is the same
+            if(equalFreq(charsInP, charsInS)) {
+                res.add(i - lenP+1);
+            }
+        }
+        return res;
+    }
+
+    private void calculateFreq(String s, int[] chars){
+        for(char ch : s.toCharArray()){
+            chars[ch-'a']++;
+        }
+    }
+    private boolean equalFreq(int[] chars1, int[] chars2){
+        for(int i = 0 ; i < 26; i++){
+            if (chars1[i] != chars2[i]){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Map<Integer, DLinkedNode> cache = new HashMap<Integer, DLinkedNode>();
+    private int size;
+    private int capacity;
+    private DLinkedNode head, tail;
+    /* My Defined classes double linked list class */
+    class DLinkedNode {
+        int key;
+        int value;
+        DLinkedNode prev;
+        DLinkedNode next;
+    }
+
+    private void addNode(DLinkedNode node) {
+        //Since the new node is the most recently used node,
+        //we add it after the pseudo head.
+        //Pseudo Head and Tail of the DLL will remain the same.
+        node.prev = head;
+        node.next = head.next;
+
+        //The former node after the pseudo head, now points to
+        //the new node as its previous node.
+        head.next.prev = node;
+        head.next = node;
+    }
+
+    //Removing a node from the DLL
+    // Do the same but in reverse
+    private void removeNode(DLinkedNode node) {
+        //The node before and after the deleted node
+        DLinkedNode prev = node.prev;
+        DLinkedNode next = node.next;
+
+        //The previous node points to the node after
+        //the removed node.
+        prev.next = next;
+        //The next node points to the node before
+        //the removed node.
+        next.prev = prev;
+    }
+
+    private void moveToHead(DLinkedNode node) {
+        removeNode(node);
+        addNode(node);
+    }
+
+    //Pops out the node before the pseudo tail
+    //and returns the removed node.
+    private DLinkedNode popTail() {
+        DLinkedNode lastItem = tail.prev;
+        lastItem.prev.next = tail;
+        tail.prev = lastItem.prev;
+        return lastItem;
+    }
+
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        size = 0;
+
+        tail = new DLinkedNode();
+        tail.key = -1;
+        tail.value = -1;
+        tail.next = null;
+
+        head = new DLinkedNode();
+        head.key = -1;
+        head.value = -1;
+        head.prev = null;
+        head.next = tail;
+
+        tail.prev = head;
+    }
+
+    public int get(int key) {
+        // if the cache contains the key, we return the item and move to head
+        if (cache.containsKey(key)) {
+            DLinkedNode item = cache.get(key);
+            moveToHead(item);
+            return item.value;
+        } else {
+            // If the cache does not contain the key
+            return -1;
+        }
+    }
+
+    public void put(int key, int value) {
+        // if the cache contains the key, we update the key
+        if (cache.containsKey(key)) {
+            DLinkedNode item = cache.get(key);
+            item.value = value;
+            moveToHead(item);
+        } else {
+            // Add the new item
+            DLinkedNode newItem = new DLinkedNode();
+            newItem.key = key;
+            newItem.value = value;
+            cache.put(key, newItem);
+            addNode(newItem);
+            ++size;
+
+            if (size > capacity) {
+                // Get rid of the least recent item
+                DLinkedNode lruItem = popTail();
+                cache.remove(lruItem.key);
+                --size;
+            }
+        }
     }
 
     /* Defined Classes */
