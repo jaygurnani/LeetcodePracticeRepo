@@ -732,6 +732,68 @@ public class main {
         return true;
     }
 
+    public static boolean isValid(String s) {
+        char[] sCharArray = s.toCharArray();
+        Stack<Character> stack = new Stack<>();
+
+        for(int i = 0; i < s.length(); i++) {
+            char charAti = sCharArray[i];
+
+            // We have an input character
+            if (charAti == '(' || charAti == '[' || charAti == '{' ){
+                stack.push(charAti);
+            } else {
+                if (stack.size() == 0) {
+                    return false;
+                }
+
+                // We have an exit character
+                char result = stack.pop();
+                if (result == '(' && charAti != ')') {
+                    return false;
+                }
+                if (result == '{' && charAti != '}') {
+                    return false;
+                }
+                if (result == '[' && charAti != ']') {
+                    return false;
+                }
+            }
+        }
+
+        if (stack.size() == 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // Backtracking
+    public static List<String> letterCombinations(String digits) {
+        if (digits.isEmpty()) return Collections.emptyList();
+        String[] phone_map = {"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        List<String> output = new ArrayList<>();
+        backtrack("", digits, phone_map, output);
+
+        return output;
+    }
+
+    public static void backtrack(String combination, String next_digits, String[] phone_map, List<String> output) {
+        if (next_digits.isEmpty()) {
+            output.add(combination);
+        } else {
+            int toCheck = next_digits.charAt(0);
+            // 0 & 1 don't have any phone items
+            String lookupItem = phone_map[toCheck - '2'];
+            char[] lookupItemCharArray = lookupItem.toCharArray();
+
+            for (int i = 0; i < lookupItem.length(); i++) {
+                backtrack(combination + lookupItemCharArray[i], next_digits.substring(1), phone_map, output );
+            }
+        }
+    }
+
+
     private Map<Integer, DLinkedNode> cache = new HashMap<Integer, DLinkedNode>();
     private int size;
     private int capacity;
