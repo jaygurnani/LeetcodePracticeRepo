@@ -68,9 +68,13 @@ public class main {
 //        int[] input = {1,3,2,8,4,9};
 //        int output = maxProfit(input, 3);
 
-        String s = "abab";
-        String p = "ab";
-        List<Integer> output = findAnagrams(s,p);
+//        String s = "abab";
+//        String p = "ab";
+//        List<Integer> output = findAnagrams(s,p);
+
+        Trie trie = new Trie();
+        trie.insert("apple");
+        boolean output = trie.search("apple");
 
         System.out.println(output);
     }
@@ -848,23 +852,23 @@ public class main {
         return lastItem;
     }
 
-    public LRUCache(int capacity) {
-        this.capacity = capacity;
-        size = 0;
-
-        tail = new DLinkedNode();
-        tail.key = -1;
-        tail.value = -1;
-        tail.next = null;
-
-        head = new DLinkedNode();
-        head.key = -1;
-        head.value = -1;
-        head.prev = null;
-        head.next = tail;
-
-        tail.prev = head;
-    }
+//    public LRUCache(int capacity) {
+//        this.capacity = capacity;
+//        size = 0;
+//
+//        tail = new DLinkedNode();
+//        tail.key = -1;
+//        tail.value = -1;
+//        tail.next = null;
+//
+//        head = new DLinkedNode();
+//        head.key = -1;
+//        head.value = -1;
+//        head.prev = null;
+//        head.next = tail;
+//
+//        tail.prev = head;
+//    }
 
     public int get(int key) {
         // if the cache contains the key, we return the item and move to head
@@ -922,6 +926,77 @@ public class main {
       ListNode() {}
       ListNode(int val) { this.val = val; }
       ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+    }
+
+    static class Trie {
+
+        TrieObj rootNode;
+
+        public class TrieObj {
+            char val;
+            HashMap<Character, TrieObj> dict = new HashMap<Character, TrieObj>();
+            boolean isEndNode = false;
+        }
+
+        public Trie() {
+            rootNode = new TrieObj();
+        }
+
+        public void insert(String word) {
+            char[] wordCharArray = word.toCharArray();
+            TrieObj currentNode = rootNode;
+
+            for(int i = 0; i < wordCharArray.length; i++) {
+                // If it does exist
+                if (currentNode.dict.containsKey(wordCharArray[i])){
+
+                    // Navigate to this node
+                    currentNode = currentNode.dict.get(wordCharArray[i]);
+                } else {
+                    // if it doesn't exist we need to create it
+                    TrieObj newNode = new TrieObj();
+                    newNode.val = wordCharArray[i];
+
+                    currentNode.dict.put(wordCharArray[i], newNode);
+                    currentNode = newNode;
+                }
+            }
+
+            // End the Current word
+            currentNode.isEndNode = true;
+        }
+
+        public boolean search(String word) {
+            char[] wordCharArray = word.toCharArray();
+            TrieObj currentNode = rootNode;
+
+            for (int i = 0; i < wordCharArray.length; i++) {
+                if (!currentNode.dict.containsKey(wordCharArray[i])) {
+                    return false;
+                } else {
+                    currentNode = currentNode.dict.get(wordCharArray[i]);
+                }
+            }
+
+            if(currentNode.isEndNode) {
+                return true;
+            }
+
+            return false;
+        }
+
+        public boolean startsWith(String prefix) {
+            char[] wordCharArray = prefix.toCharArray();
+            TrieObj currentNode = rootNode;
+
+            for (int i = 0; i < wordCharArray.length; i++) {
+                if (!currentNode.dict.containsKey(wordCharArray[i])) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 
 }
