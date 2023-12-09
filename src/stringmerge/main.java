@@ -72,9 +72,11 @@ public class main {
 //        String p = "ab";
 //        List<Integer> output = findAnagrams(s,p);
 
-        Trie trie = new Trie();
-        trie.insert("apple");
-        boolean output = trie.search("apple");
+      //  Trie trie = new Trie();
+//        trie.insert("apple");
+  //      boolean output = trie.search("apple");
+
+        int output = longestCommonSubsequence("abcde", "xxaxx");
 
         System.out.println(output);
     }
@@ -550,7 +552,7 @@ public class main {
 
     }
 
-    public static int longestCommonSubsequence(String text1, String text2) {
+    public static int longestCommonSubsequence2(String text1, String text2) {
         int text1Length = text1.toCharArray().length;
         char[] text1CharArray = text1.toCharArray();
 
@@ -566,6 +568,27 @@ public class main {
 
                 } else {
                     dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1] );
+                }
+            }
+        }
+
+        return dp[text1Length][text2Length];
+    }
+
+
+    public static int longestCommonSubsequence(String text1, String text2) {
+        int text1Length = text1.length();
+        int text2Length = text2.length();
+        char[] text1CharArray = text1.toCharArray();
+        char[] text2CharArray = text2.toCharArray();
+        int[][] dp = new int[text1Length+1][text2Length+1];
+
+        for(int i = 0; i < text1Length; i++) {
+            for(int j = 0; j < text2Length; j++) {
+                if (text1CharArray[i] == text2CharArray[j]) {
+                    dp[i+1][j+1] = dp[i][j] + 1;
+                } else  {
+                    dp[i+1][j+1] = Math.max(dp[i][j+1], dp[i+1][j]);
                 }
             }
         }
